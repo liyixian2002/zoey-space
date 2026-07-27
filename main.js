@@ -451,13 +451,13 @@ function init() {
         initMusicPlayer();
         initEntryOverlay();
 
-        // 预加载图片，完成后显示引导页
-        preloadImages(PRELOAD_IMAGES).then(() => {
-            document.getElementById('loading').classList.add('hidden');
-            // 显示进入引导层
-            const entryOverlay = document.getElementById('entry-overlay');
-            if (entryOverlay) entryOverlay.classList.add('active');
-        });
+        // 先显示引导页，后台静默预加载图片
+        document.getElementById('loading').classList.add('hidden');
+        const entryOverlay = document.getElementById('entry-overlay');
+        if (entryOverlay) entryOverlay.classList.add('active');
+
+        // 后台静默预加载图片（不阻塞引导页显示）
+        preloadImages(PRELOAD_IMAGES);
 
         animate();
     } catch (e) {
