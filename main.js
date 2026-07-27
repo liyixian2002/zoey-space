@@ -381,6 +381,33 @@ const objectData = {
     },
 };
 
+// 预加载图片列表
+const PRELOAD_IMAGES = [
+    // 相册图片
+    'photo1.jpg', 'photo2.jpg', 'photo3.jpg', 'photo4.jpg', 'photo5.jpg',
+    'photo6.jpg', 'photo7.jpg', 'photo8.jpg', 'photo9.jpg',
+    // 书籍封面
+    'book1.png', 'book2.png', 'book3.png', 'book4.png', 'book5.png', 'book6.png', 'book7.png',
+    // 头像
+    'avatar1.png', 'avatar2.png', 'avatar3.png',
+    // 其他图片
+    'photo-wall.jpeg', 'medal1-image.jpeg',
+    'xhs-logo-rgb.png', 'douyin-logo-rgb.png', 'douyin-avatar.png',
+    'pillow-cover.jpeg'
+];
+
+// 预加载所有图片
+function preloadImages(images) {
+    return Promise.all(images.map(src => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = resolve;
+            img.onerror = resolve; // 即使加载失败也继续
+            img.src = src;
+        });
+    }));
+}
+
 function init() {
     try {
         scene = new THREE.Scene();
@@ -424,12 +451,13 @@ function init() {
         initMusicPlayer();
         initEntryOverlay();
 
-        setTimeout(() => {
+        // 预加载图片，完成后显示引导页
+        preloadImages(PRELOAD_IMAGES).then(() => {
             document.getElementById('loading').classList.add('hidden');
             // 显示进入引导层
             const entryOverlay = document.getElementById('entry-overlay');
             if (entryOverlay) entryOverlay.classList.add('active');
-        }, 600);
+        });
 
         animate();
     } catch (e) {
