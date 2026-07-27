@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简约电竞椅 · 3D 展示</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="canvas-container"></div>
+
+    <header class="header">
+        <span class="brand">CHAIR ONE</span>
+        <h1 class="title">简约电竞椅</h1>
+        <p class="subtitle">Apple 风格设计语言 · 极简几何美学</p>
+    </header>
+
+    <div class="controls">
+        <div class="control-item">
+            <span class="ctrl-icon">↔</span>
+            <span>拖拽旋转</span>
+        </div>
+        <div class="control-item">
+            <span class="ctrl-icon">⊕</span>
+            <span>滚轮缩放</span>
+        </div>
+        <div class="control-item">
+            <span class="ctrl-icon">⇧</span>
+            <span>右键平移</span>
+        </div>
+    </div>
+
+    <div class="info-panel" id="info-panel">
+        <div class="info-row">
+            <span class="info-label">框架</span>
+            <span class="info-value">太空灰铝合金</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">坐垫</span>
+            <span class="info-value">深空黑记忆棉</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">底座</span>
+            <span class="info-value">五辐星形脚轮</span>
+        </div>
+    </div>
+
+    <div id="loading" class="loading">
+        <div class="loading-dot"></div>
+        <p>Building...</p>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

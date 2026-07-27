@@ -1,0 +1,11 @@
+# Fabric Diffuse Texture
+# This is a placeholder. In a full production pipeline, you would:
+# 1. Create a seamless fabric weave normal map in Substance Designer or Photoshop
+# 2. Export as PNG with transparency for any stitching details
+# 3. The current model uses procedural PBR materials without external textures
+#
+# To add textures:
+# - Export the chair from Blender after importing chair.glb
+# - UV unwrap each mesh part
+# - Bake/fabricate textures in your preferred tool
+# - Re-export as textured GLB
