@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+    <h1>Testing...</h1>
+    <div id="result"></div>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        document.getElementById('result').innerHTML = 'Three.js loaded: ' + THREE.REVISION;
+        
+        // Test SphereGeometry with 7 params
+        try {
+            const geo = new THREE.SphereGeometry(0.22, 32, 24, 0, Math.PI * 2, 0, Math.PI * 0.65);
+            document.getElementById('result').innerHTML += '<br>SphereGeometry(7 params): OK';
+        } catch(e) {
+            document.getElementById('result').innerHTML += '<br>SphereGeometry(7 params): FAIL - ' + e.message;
+        }
+        
+        // Test CatmullRomCurve3
+        try {
+            const curve = new THREE.CatmullRomCurve3([
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(0, 1, 0)
+            ]);
+            const tube = new THREE.TubeGeometry(curve, 16, 0.02, 8, false);
+            document.getElementById('result').innerHTML += '<br>TubeGeometry: OK';
+        } catch(e) {
+            document.getElementById('result').innerHTML += '<br>TubeGeometry: FAIL - ' + e.message;
+        }
+        
+        // Test Shape with bezierCurveTo
+        try {
+            const shape = new THREE.Shape();
+            shape.moveTo(0, -1);
+            shape.bezierCurveTo(0.8, -1.2, 1.1, -0.3, 0.9, 0.3);
+            const shapeGeo = new THREE.ShapeGeometry(shape, 24);
+            document.getElementById('result').innerHTML += '<br>ShapeGeometry: OK';
+        } catch(e) {
+            document.getElementById('result').innerHTML += '<br>ShapeGeometry: FAIL - ' + e.message;
+        }
+    </script>
+</body>
+</html>

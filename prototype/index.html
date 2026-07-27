@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desk Space | 3D Interactive</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="canvas-container"></div>
+
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+        <p>构建空间中...</p>
+    </div>
+
+    <div id="entry-overlay" class="entry-overlay">
+        <div class="entry-content">
+            <div class="entry-icon">🏠</div>
+            <h2 class="entry-title">Zoey的空间已就绪 / Space Ready</h2>
+            <div class="entry-hints">
+                <div class="entry-hint">
+                    <span class="entry-hint-icon">🖱️</span>
+                    <span>鼠标拖拽旋转视角 / Drag to Rotate</span>
+                </div>
+                <div class="entry-hint">
+                    <span class="entry-hint-icon">🔍</span>
+                    <span>滚轮缩放 / Scroll to Zoom</span>
+                </div>
+                <div class="entry-hint">
+                    <span class="entry-hint-icon">👆</span>
+                    <span>触控板双指滑动控制 / Two-Finger Scroll</span>
+                </div>
+                <div class="entry-hint">
+                    <span class="entry-hint-icon">⌨️</span>
+                    <span>按 R 键重置视角 / Press R to Reset</span>
+                </div>
+                <div class="entry-hint">
+                    <span class="entry-hint-icon">👁️</span>
+                    <span>点击物品查看详情 / Click to Explore</span>
+                </div>
+            </div>
+            <button id="entry-btn" class="entry-btn">进入空间 / Enter Space</button>
+        </div>
+    </div>
+
+    <div id="music-player" class="music-player">
+        <img src="pillow-cover.jpeg" class="music-cover" alt="Pillow 封面">
+        <div id="music-lyric" class="music-lyric"></div>
+        <button id="music-toggle" class="music-toggle" aria-label="播放/暂停音乐">
+            <svg id="music-icon-pause" class="music-icon" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16" rx="1"/>
+                <rect x="14" y="4" width="4" height="16" rx="1"/>
+            </svg>
+            <svg id="music-icon-play" class="music-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+        </button>
+        <div class="music-info">
+            <span class="music-track">Pillow</span>
+            <span class="music-artist">早安</span>
+        </div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

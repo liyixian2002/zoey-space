@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心语盆栽 - 留言查看</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'PingFang SC', sans-serif;
+            background: #f5f5f0;
+            color: #1a1a1a;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .header {
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .stats {
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0071e3;
+        }
+
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.2rem;
+        }
+
+        .feedback-list {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .feedback-item {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .feedback-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .feedback-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1a1a1a;
+        }
+
+        .feedback-time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .feedback-message {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .export-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 0.8rem 1.5rem;
+            background: #0071e3;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,113,227,0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .export-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 24px rgba(0,113,227,0.4);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🪴 心语盆栽留言簿</h1>
+        <p>来自个人网站访客的心声</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="number" id="total-count">0</div>
+            <div class="label">总留言数</div>
+        </div>
+    </div>
+
+    <div class="feedback-list" id="feedback-list">
+        <div class="empty-state">
+            <div class="icon">🌱</div>
+            <p>还没有留言哦，等待第一颗种子发芽...</p>
+        </div>
+    </div>
+
+    <button class="export-btn" onclick="exportToCSV()">📥 导出 CSV</button>
+
+    <script>
+        // 从 localStorage 读取反馈数据
+        function loadFeedbacks() {
+            const data = JSON.parse(localStorage.getItem('feedbacks') || '[]');
+            // 按时间倒序排列
+            return data.sort((a, b) => b.timestamp - a.timestamp);
+        }
+
+        function renderFeedbacks() {
+            const feedbacks = loadFeedbacks();
+            const listEl = document.getElementById('feedback-list');
+            const countEl = document.getElementById('total-count');
+
+            countEl.textContent = feedbacks.length;
+
+            if (feedbacks.length === 0) {
+                listEl.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🌱</div>
+                        <p>还没有留言哦，等待第一颗种子发芽...</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = feedbacks.map(item => `
+                <div class="feedback-item">
+                    <div class="feedback-header">
+                        <span class="feedback-name">${escapeHtml(item.name)}</span>
+                        <span class="feedback-time">${item.time}</span>
+                    </div>
+                    <div class="feedback-message">${escapeHtml(item.message)}</div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function exportToCSV() {
+            const feedbacks = loadFeedbacks();
+            if (feedbacks.length === 0) {
+                alert('没有数据可导出');
+                return;
+            }
+
+            // CSV 头部
+            let csv = '\uFEFF序号,昵称,留言内容,时间\n';
+
+            feedbacks.forEach((item, index) => {
+                const name = escapeCsv(item.name);
+                const message = escapeCsv(item.message);
+                const time = escapeCsv(item.time);
+                csv += `${index + 1},${name},${message},${time}\n`;
+            });
+
+            // 下载文件
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `心语盆栽留言_${new Date().toLocaleDateString('zh-CN')}.csv`;
+            link.click();
+        }
+
+        function escapeCsv(text) {
+            if (text.includes(',') || text.includes('"') || text.includes('\n')) {
+                return '"' + text.replace(/"/g, '""') + '"';
+            }
+            return text;
+        }
+
+        // 初始渲染
+        renderFeedbacks();
+
+        // 监听 storage 变化，实时更新
+        window.addEventListener('storage', renderFeedbacks);
+    </script>
+</body>
+</html>
