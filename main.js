@@ -2957,18 +2957,19 @@ function setupEventListeners() {
     });
 
     // 滚轮支持：鼠标滚轮缩放，触控板双指滑动旋转
+    // 区分方式：鼠标滚轮 deltaY 较大(>10)，触控板 deltaY 较小(<10)
     canvas.addEventListener('wheel', (e) => {
         e.preventDefault();
-        if (e.ctrlKey || e.metaKey) {
-            // Ctrl/Command + 滚轮 = 缩放
+        const isMouseWheel = Math.abs(e.deltaY) > 10 || Math.abs(e.deltaX) > 10;
+        if (isMouseWheel) {
+            // 鼠标滚轮 = 缩放
             cameraDistance = Math.max(3, Math.min(20, cameraDistance + e.deltaY * 0.008));
-        } else if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-            // 水平滚动 = 旋转（触控板左右滑动）
-            cameraAngle.theta += e.deltaX * 0.003;
-            cameraAngle.theta = Math.max(-Math.PI * 0.85, Math.min(Math.PI * 0.85, cameraAngle.theta));
         } else {
-            // 垂直滚动 = 缩放（鼠标滚轮）
-            cameraDistance = Math.max(3, Math.min(20, cameraDistance + e.deltaY * 0.008));
+            // 触控板 = 旋转（不处理缩放）
+            cameraAngle.theta += e.deltaX * 0.003;
+            cameraAngle.phi += e.deltaY * 0.003;
+            cameraAngle.phi = Math.max(0.15, Math.min(Math.PI - 0.2, cameraAngle.phi));
+            cameraAngle.theta = Math.max(-Math.PI * 0.85, Math.min(Math.PI * 0.85, cameraAngle.theta));
         }
         updateCameraPosition();
     }, { passive: false });
