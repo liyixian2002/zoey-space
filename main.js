@@ -2927,12 +2927,6 @@ function setupEventListeners() {
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
             previousMousePosition = { x: touchStartX, y: touchStartY };
-        } else if (e.touches.length === 2) {
-            // 双指缩放
-            isTouchDragging = false;
-            const dx = e.touches[0].clientX - e.touches[1].clientX;
-            const dy = e.touches[0].clientY - e.touches[1].clientY;
-            touchStartDistance = Math.sqrt(dx * dx + dy * dy);
         }
     }, { passive: false });
 
@@ -2947,15 +2941,6 @@ function setupEventListeners() {
             cameraAngle.theta = Math.max(-Math.PI * 0.85, Math.min(Math.PI * 0.85, cameraAngle.theta));
             updateCameraPosition();
             previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        } else if (e.touches.length === 2) {
-            // 双指缩放
-            const dx = e.touches[0].clientX - e.touches[1].clientX;
-            const dy = e.touches[0].clientY - e.touches[1].clientY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            const scale = touchStartDistance / distance;
-            cameraDistance = Math.max(3, Math.min(20, cameraDistance * scale));
-            touchStartDistance = distance;
-            updateCameraPosition();
         }
     }, { passive: false });
 
