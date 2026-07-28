@@ -2096,45 +2096,31 @@ function createPhotoAlbumWall() {
 function createFeedbackBox() {
     const group = new THREE.Group();
 
-    // ========== 白色陶瓷花盆（参考图片风格）==========
+    // ========== 白色陶瓷花盆（圆润一体式）==========
     const potWhiteMat = new THREE.MeshStandardMaterial({
         color: 0xf5f5f0,
         roughness: 0.25,
         metalness: 0.05
     });
 
-    // 盆身 - 圆润蛋形，上宽下窄更柔和
-    const potGeo = new THREE.SphereGeometry(0.22, 32, 24, 0, Math.PI * 2, 0, Math.PI * 0.65);
+    // 盆身 - 使用LatheGeometry创建圆润一体式花盆
+    const potPoints = [];
+    // 从底部中心开始，向上绘制轮廓
+    potPoints.push(new THREE.Vector2(0, 0));           // 底部中心
+    potPoints.push(new THREE.Vector2(0.10, 0));        // 底部边缘
+    potPoints.push(new THREE.Vector2(0.14, 0.06));     // 底部圆弧
+    potPoints.push(new THREE.Vector2(0.19, 0.20));     // 中部
+    potPoints.push(new THREE.Vector2(0.21, 0.32));     // 上部
+    potPoints.push(new THREE.Vector2(0.205, 0.36));    // 盆口外沿
+    potPoints.push(new THREE.Vector2(0.185, 0.36));    // 盆口内沿
+    potPoints.push(new THREE.Vector2(0.18, 0.34));     // 内部
+    potPoints.push(new THREE.Vector2(0.17, 0.30));     // 内部底部
+
+    const potGeo = new THREE.LatheGeometry(potPoints, 32);
     const potBody = new THREE.Mesh(potGeo, potWhiteMat);
-    potBody.position.y = 0.18;
-    potBody.scale.set(1, 0.85, 1);
     potBody.castShadow = true;
+    potBody.receiveShadow = true;
     group.add(potBody);
-
-    // 盆口 - 平整的圆形开口
-    const potRim = new THREE.Mesh(
-        new THREE.TorusGeometry(0.195, 0.015, 12, 32),
-        potWhiteMat
-    );
-    potRim.position.y = 0.355;
-    potRim.rotation.x = Math.PI / 2;
-    group.add(potRim);
-
-    // 盆口内沿
-    const potTop = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.195, 0.185, 0.02, 32),
-        potWhiteMat
-    );
-    potTop.position.y = 0.345;
-    group.add(potTop);
-
-    // 盆底 - 平整
-    const potBase = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.12, 0.12, 0.015, 32),
-        potWhiteMat
-    );
-    potBase.position.y = 0.007;
-    group.add(potBase);
 
     // 土壤 - 深褐色，表面有苔藓点缀
     const soilMat = new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.95 });
@@ -2294,27 +2280,27 @@ function createFeedbackBox() {
         return leafGroup;
     }
 
-    // 添加叶片 - 15片密集布局，完全遮挡茎干
+    // 添加叶片 - 自然向外展开，像真实的龟背竹
     const leaves = [
-        // 顶层 - 3片大叶向外展开
-        { size: 0.28, pos: new THREE.Vector3(0.02, 1.05, 0.05), rot: { x: -0.5, y: 0.1, z: 0.05 } },
-        { size: 0.26, pos: new THREE.Vector3(0.22, 0.98, 0.12), rot: { x: -0.55, y: 0.7, z: 0.25 } },
-        { size: 0.25, pos: new THREE.Vector3(-0.22, 0.95, 0.10), rot: { x: -0.5, y: -0.8, z: -0.2 } },
-        // 第二层 - 4片中叶
-        { size: 0.23, pos: new THREE.Vector3(0.18, 0.82, 0.16), rot: { x: -0.4, y: 1.1, z: 0.35 } },
-        { size: 0.22, pos: new THREE.Vector3(-0.18, 0.78, 0.14), rot: { x: -0.35, y: -1.2, z: -0.3 } },
-        { size: 0.21, pos: new THREE.Vector3(0.08, 0.88, -0.16), rot: { x: -0.65, y: 0.3, z: 0.1 } },
-        { size: 0.20, pos: new THREE.Vector3(-0.06, 0.85, -0.14), rot: { x: -0.6, y: -0.4, z: -0.1 } },
-        // 第三层 - 4片遮挡茎干中下部的叶片
-        { size: 0.22, pos: new THREE.Vector3(0.12, 0.68, 0.12), rot: { x: -0.25, y: 0.8, z: 0.2 } },
-        { size: 0.21, pos: new THREE.Vector3(-0.12, 0.65, 0.10), rot: { x: -0.2, y: -0.9, z: -0.15 } },
-        { size: 0.19, pos: new THREE.Vector3(0.20, 0.72, 0.06), rot: { x: -0.3, y: 1.4, z: 0.4 } },
-        { size: 0.18, pos: new THREE.Vector3(-0.20, 0.68, 0.04), rot: { x: -0.25, y: -1.5, z: -0.35 } },
-        // 底层 - 4片小叶片遮挡花盆口和茎干底部
-        { size: 0.17, pos: new THREE.Vector3(0.14, 0.52, 0.10), rot: { x: -0.15, y: 0.6, z: 0.3 } },
-        { size: 0.16, pos: new THREE.Vector3(-0.14, 0.50, 0.08), rot: { x: -0.1, y: -0.7, z: -0.25 } },
-        { size: 0.15, pos: new THREE.Vector3(0.08, 0.48, 0.14), rot: { x: -0.2, y: 1.0, z: 0.35 } },
-        { size: 0.14, pos: new THREE.Vector3(-0.08, 0.46, 0.12), rot: { x: -0.15, y: -1.1, z: -0.3 } },
+        // 顶层 - 3片大叶水平向外（不是垂直向上）
+        { size: 0.26, pos: new THREE.Vector3(0.05, 0.95, 0.15), rot: { x: -1.2, y: 0.2, z: 0.1 } },
+        { size: 0.24, pos: new THREE.Vector3(0.28, 0.88, 0.05), rot: { x: -1.3, y: 0.8, z: 0.3 } },
+        { size: 0.23, pos: new THREE.Vector3(-0.26, 0.85, 0.08), rot: { x: -1.25, y: -0.9, z: -0.25 } },
+        // 第二层 - 4片向斜下方展开
+        { size: 0.22, pos: new THREE.Vector3(0.22, 0.72, 0.20), rot: { x: -1.0, y: 1.2, z: 0.4 } },
+        { size: 0.21, pos: new THREE.Vector3(-0.20, 0.68, 0.18), rot: { x: -0.95, y: -1.3, z: -0.35 } },
+        { size: 0.20, pos: new THREE.Vector3(0.10, 0.78, -0.18), rot: { x: -1.4, y: 0.4, z: 0.15 } },
+        { size: 0.19, pos: new THREE.Vector3(-0.08, 0.75, -0.16), rot: { x: -1.35, y: -0.5, z: -0.1 } },
+        // 第三层 - 4片遮挡茎干中部
+        { size: 0.21, pos: new THREE.Vector3(0.18, 0.58, 0.18), rot: { x: -0.8, y: 0.9, z: 0.25 } },
+        { size: 0.20, pos: new THREE.Vector3(-0.16, 0.55, 0.16), rot: { x: -0.75, y: -1.0, z: -0.2 } },
+        { size: 0.18, pos: new THREE.Vector3(0.24, 0.62, 0.02), rot: { x: -0.9, y: 1.6, z: 0.45 } },
+        { size: 0.17, pos: new THREE.Vector3(-0.22, 0.58, 0.04), rot: { x: -0.85, y: -1.7, z: -0.4 } },
+        // 底层 - 4片小叶片遮挡花盆口
+        { size: 0.16, pos: new THREE.Vector3(0.16, 0.42, 0.14), rot: { x: -0.6, y: 0.6, z: 0.2 } },
+        { size: 0.15, pos: new THREE.Vector3(-0.14, 0.40, 0.12), rot: { x: -0.55, y: -0.7, z: -0.15 } },
+        { size: 0.14, pos: new THREE.Vector3(0.10, 0.38, 0.18), rot: { x: -0.5, y: 1.1, z: 0.3 } },
+        { size: 0.13, pos: new THREE.Vector3(-0.08, 0.36, 0.16), rot: { x: -0.45, y: -1.2, z: -0.25 } },
     ];
 
     leaves.forEach(l => {
