@@ -2156,10 +2156,9 @@ function createFeedbackBox() {
         group.add(moss);
     }
 
-    // ========== 茎干（参考图片：多根自然弯曲）==========
+    // ========== 茎干（精简为3根，被叶片完全遮挡）==========
     const stemMat = new THREE.MeshStandardMaterial({ color: 0x5d8c6a, roughness: 0.7 });
 
-    // 辅助函数：创建自然弯曲的茎（用CatmullRom曲线）
     function createCurvedStem(points, radius, segments = 16) {
         const curve = new THREE.CatmullRomCurve3(points);
         const tubeGeo = new THREE.TubeGeometry(curve, segments, radius, 8, false);
@@ -2168,62 +2167,32 @@ function createFeedbackBox() {
         return stem;
     }
 
-    // 主茎 - 中央直立，顶部微弯
+    // 主茎 - 中央直立
     const mainStem = createCurvedStem([
         new THREE.Vector3(0, 0.34, 0),
-        new THREE.Vector3(0.005, 0.50, 0.005),
-        new THREE.Vector3(-0.01, 0.70, -0.01),
-        new THREE.Vector3(0.02, 0.90, 0.01),
-        new THREE.Vector3(0.01, 1.10, 0.02),
-    ], 0.022);
+        new THREE.Vector3(0.01, 0.55, 0.01),
+        new THREE.Vector3(-0.01, 0.80, -0.01),
+        new THREE.Vector3(0.01, 1.00, 0.01),
+    ], 0.020);
     group.add(mainStem);
 
-    // 侧茎1 - 向右前方弯曲
+    // 侧茎1 - 向右前方
     const stem1 = createCurvedStem([
-        new THREE.Vector3(0.01, 0.36, 0.01),
-        new THREE.Vector3(0.04, 0.52, 0.05),
-        new THREE.Vector3(0.10, 0.72, 0.10),
-        new THREE.Vector3(0.16, 0.92, 0.12),
-        new THREE.Vector3(0.18, 1.08, 0.10),
-    ], 0.016);
+        new THREE.Vector3(0.02, 0.36, 0.02),
+        new THREE.Vector3(0.06, 0.55, 0.08),
+        new THREE.Vector3(0.14, 0.78, 0.14),
+        new THREE.Vector3(0.20, 0.95, 0.12),
+    ], 0.014);
     group.add(stem1);
 
-    // 侧茎2 - 向左前方弯曲
+    // 侧茎2 - 向左前方
     const stem2 = createCurvedStem([
-        new THREE.Vector3(-0.01, 0.35, 0.01),
-        new THREE.Vector3(-0.05, 0.50, 0.04),
-        new THREE.Vector3(-0.12, 0.68, 0.08),
-        new THREE.Vector3(-0.18, 0.86, 0.10),
-        new THREE.Vector3(-0.20, 1.02, 0.08),
-    ], 0.014);
+        new THREE.Vector3(-0.02, 0.36, 0.02),
+        new THREE.Vector3(-0.07, 0.55, 0.06),
+        new THREE.Vector3(-0.16, 0.76, 0.10),
+        new THREE.Vector3(-0.22, 0.92, 0.08),
+    ], 0.013);
     group.add(stem2);
-
-    // 侧茎3 - 向后方弯曲（较短）
-    const stem3 = createCurvedStem([
-        new THREE.Vector3(0, 0.38, -0.01),
-        new THREE.Vector3(0.02, 0.54, -0.06),
-        new THREE.Vector3(0.05, 0.72, -0.12),
-        new THREE.Vector3(0.06, 0.88, -0.16),
-    ], 0.012);
-    group.add(stem3);
-
-    // 侧茎4 - 矮茎，向右下方
-    const stem4 = createCurvedStem([
-        new THREE.Vector3(0.01, 0.34, 0),
-        new THREE.Vector3(0.06, 0.46, 0.03),
-        new THREE.Vector3(0.12, 0.58, 0.06),
-        new THREE.Vector3(0.16, 0.68, 0.08),
-    ], 0.010);
-    group.add(stem4);
-
-    // 侧茎5 - 矮茎，向左下方
-    const stem5 = createCurvedStem([
-        new THREE.Vector3(-0.01, 0.34, 0),
-        new THREE.Vector3(-0.06, 0.44, 0.02),
-        new THREE.Vector3(-0.12, 0.54, 0.05),
-        new THREE.Vector3(-0.16, 0.64, 0.06),
-    ], 0.009);
-    group.add(stem5);
 
     // ========== 精致龟背竹叶片（参考图片风格）==========
     function createMonsteraLeaf(size, position, rotation, stemOffset = null) {
@@ -2325,24 +2294,27 @@ function createFeedbackBox() {
         return leafGroup;
     }
 
-    // 添加叶片 - 参考图片布局：7-8片，大小不一，自然展开
+    // 添加叶片 - 15片密集布局，完全遮挡茎干
     const leaves = [
-        // 顶部大叶
-        { size: 0.26, pos: new THREE.Vector3(0.01, 1.12, 0.02), rot: { x: -0.4, y: 0.2, z: 0.05 } },
-        // 右上大叶
-        { size: 0.24, pos: new THREE.Vector3(0.20, 1.08, 0.10), rot: { x: -0.5, y: 0.6, z: 0.2 } },
-        // 左上大叶
-        { size: 0.23, pos: new THREE.Vector3(-0.20, 1.02, 0.08), rot: { x: -0.45, y: -0.7, z: -0.15 } },
-        // 右中中叶
-        { size: 0.20, pos: new THREE.Vector3(0.18, 0.88, 0.14), rot: { x: -0.35, y: 1.0, z: 0.3 } },
-        // 左中中叶
-        { size: 0.19, pos: new THREE.Vector3(-0.18, 0.84, 0.12), rot: { x: -0.3, y: -1.1, z: -0.25 } },
-        // 后中叶片
-        { size: 0.18, pos: new THREE.Vector3(0.06, 0.92, -0.14), rot: { x: -0.6, y: 0.4, z: 0.1 } },
-        // 右下小叶
-        { size: 0.16, pos: new THREE.Vector3(0.16, 0.70, 0.10), rot: { x: -0.2, y: 1.3, z: 0.4 } },
-        // 左下小叶
-        { size: 0.15, pos: new THREE.Vector3(-0.16, 0.66, 0.08), rot: { x: -0.15, y: -1.4, z: -0.35 } },
+        // 顶层 - 3片大叶向外展开
+        { size: 0.28, pos: new THREE.Vector3(0.02, 1.05, 0.05), rot: { x: -0.5, y: 0.1, z: 0.05 } },
+        { size: 0.26, pos: new THREE.Vector3(0.22, 0.98, 0.12), rot: { x: -0.55, y: 0.7, z: 0.25 } },
+        { size: 0.25, pos: new THREE.Vector3(-0.22, 0.95, 0.10), rot: { x: -0.5, y: -0.8, z: -0.2 } },
+        // 第二层 - 4片中叶
+        { size: 0.23, pos: new THREE.Vector3(0.18, 0.82, 0.16), rot: { x: -0.4, y: 1.1, z: 0.35 } },
+        { size: 0.22, pos: new THREE.Vector3(-0.18, 0.78, 0.14), rot: { x: -0.35, y: -1.2, z: -0.3 } },
+        { size: 0.21, pos: new THREE.Vector3(0.08, 0.88, -0.16), rot: { x: -0.65, y: 0.3, z: 0.1 } },
+        { size: 0.20, pos: new THREE.Vector3(-0.06, 0.85, -0.14), rot: { x: -0.6, y: -0.4, z: -0.1 } },
+        // 第三层 - 4片遮挡茎干中下部的叶片
+        { size: 0.22, pos: new THREE.Vector3(0.12, 0.68, 0.12), rot: { x: -0.25, y: 0.8, z: 0.2 } },
+        { size: 0.21, pos: new THREE.Vector3(-0.12, 0.65, 0.10), rot: { x: -0.2, y: -0.9, z: -0.15 } },
+        { size: 0.19, pos: new THREE.Vector3(0.20, 0.72, 0.06), rot: { x: -0.3, y: 1.4, z: 0.4 } },
+        { size: 0.18, pos: new THREE.Vector3(-0.20, 0.68, 0.04), rot: { x: -0.25, y: -1.5, z: -0.35 } },
+        // 底层 - 4片小叶片遮挡花盆口和茎干底部
+        { size: 0.17, pos: new THREE.Vector3(0.14, 0.52, 0.10), rot: { x: -0.15, y: 0.6, z: 0.3 } },
+        { size: 0.16, pos: new THREE.Vector3(-0.14, 0.50, 0.08), rot: { x: -0.1, y: -0.7, z: -0.25 } },
+        { size: 0.15, pos: new THREE.Vector3(0.08, 0.48, 0.14), rot: { x: -0.2, y: 1.0, z: 0.35 } },
+        { size: 0.14, pos: new THREE.Vector3(-0.08, 0.46, 0.12), rot: { x: -0.15, y: -1.1, z: -0.3 } },
     ];
 
     leaves.forEach(l => {
