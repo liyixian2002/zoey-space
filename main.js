@@ -2785,7 +2785,8 @@ function initMusicPlayer() {
         }
     }
 
-    function playMusic() {
+    // 将播放控制函数挂载到全局，供 entry overlay 使用
+    window.playMusic = function() {
         if (!bgMusic) return;
         const playPromise = bgMusic.play();
         if (playPromise !== undefined) {
@@ -2798,24 +2799,24 @@ function initMusicPlayer() {
                 updateIcon();
             });
         }
-    }
+    };
 
-    function pauseMusic() {
+    window.pauseMusic = function() {
         if (!bgMusic) return;
         bgMusic.pause();
         isMusicPlaying = false;
         updateIcon();
-    }
+    };
 
-    function toggleMusic() {
+    window.toggleMusic = function() {
         if (isMusicPlaying) {
-            pauseMusic();
+            window.pauseMusic();
         } else {
-            playMusic();
+            window.playMusic();
         }
-    }
+    };
 
-    musicToggle.addEventListener('click', toggleMusic);
+    musicToggle.addEventListener('click', window.toggleMusic);
 
     // 页面加载完成后尝试自动播放
     // 现代浏览器通常会阻止自动播放，需要用户交互后才能播放
