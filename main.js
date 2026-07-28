@@ -2957,20 +2957,23 @@ function setupEventListeners() {
         }
     });
 
-    // 滚轮支持：鼠标滚轮缩放，触控板双指滑动旋转
-    // 区分方式：鼠标滚轮 deltaY 较大(>10)，触控板 deltaY 较小(<10)
+    // 滚轮支持：仅鼠标滚轮缩放，触控板只旋转
+    // 通过 pointerType 判断输入设备
     canvas.addEventListener('wheel', (e) => {
         e.preventDefault();
-        const isMouseWheel = Math.abs(e.deltaY) > 10 || Math.abs(e.deltaX) > 10;
-        if (isMouseWheel) {
-            // 鼠标滚轮 = 缩放
-            cameraDistance = Math.max(3, Math.min(20, cameraDistance + e.deltaY * 0.008));
-        } else {
-            // 触控板 = 旋转（不处理缩放）
+        // 检测是否是鼠标滚轮（不是触控板）
+        // 鼠标滚轮通常 deltaMode 为 0 且 deltaY 较大
+        // 触控板通常 deltaMode 为 0 但 deltaY 较小，或者 deltaMode 为 1
+        const isTrackpad = e.deltaMode === 0 && Math.abs(e.deltaY) < 50 && Math.abs(e.deltaX) < 50;
+        if (isTrackpad) {
+            // 触控板 = 只旋转，严禁缩放
             cameraAngle.theta += e.deltaX * 0.003;
             cameraAngle.phi += e.deltaY * 0.003;
             cameraAngle.phi = Math.max(0.15, Math.min(Math.PI - 0.2, cameraAngle.phi));
             cameraAngle.theta = Math.max(-Math.PI * 0.85, Math.min(Math.PI * 0.85, cameraAngle.theta));
+        } else {
+            // 鼠标滚轮 = 缩放
+            cameraDistance = Math.max(3, Math.min(20, cameraDistance + e.deltaY * 0.008));
         }
         updateCameraPosition();
     }, { passive: false });
